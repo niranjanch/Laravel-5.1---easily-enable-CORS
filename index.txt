@@ -1,0 +1,33 @@
+So how to implement this in Laravel? Super easy! Middlewares come to the rescue.
+
+Using your Terminal, navigate to your project’s root directory and issue the following artisan command:
+
+php artisan make:middleware Cors
+
+Now, using your editor of choice, change the newly created /app/Http/Middleware/Cors.php so it look like this:
+
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+
+class Cors {
+    public function handle($request, Closure $next)
+    {
+        return $next($request)
+            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    }
+}
+
+Next update /app/Http/Kernel.php adding the following instruction which will make Laravel aware of your custom middleware:
+
+'cors' => \App\Http\Middleware\Cors::class, // <<< add this line
+
+Use:
+
+Route::get('*', ['middleware' => 'cors', function()
+{
+    // Login
+}]);
